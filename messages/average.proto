@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package average;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "averagepb";
+
+message Operation {
+	enum Operator {
+		UNKNOWN = 0;
+		ADD = 1; SUB = 2; MUL = 3; 
+		DIV = 4; MOD = 5; SET = 6;
+	}
+	float operand = 1;
+	Operator operator = 2;
+}
+
+message CalculateRequest {
+	string id = 1;
+	uint32 seq = 2;
+	Operation operation = 3;
+}
+
+message CalculateResponse {
+	string id = 1;
+	float result = 2;
+	uint32 operations = 3;
+	google.protobuf.Timestamp timestamp = 4;
+
+}
+
+service CalculatorService {
+	rpc calculate(stream CalculateRequest) returns (CalculateResponse) {};
+}
